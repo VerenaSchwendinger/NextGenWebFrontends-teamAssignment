@@ -1,0 +1,135 @@
+/* =========================================================
+   Ctrl Alt Meet – Design Tokens
+   Ebene 1: Primitive Tokens  (Rohwerte, keine Bedeutung)
+   Ebene 2: Semantische Tokens (Verwendungszweck)
+   Regel: Komponenten verwenden ausschließlich semantische Tokens.
+   ========================================================= */
+
+:root {
+  /* ---------------------------------------------------------
+     1. PRIMITIVE TOKENS
+     --------------------------------------------------------- */
+ 
+  /* Farben */
+  --green-900: #0b2a22;  /* Deep Forest */
+  --green-800: #054a37;  /* Forest Dark */
+  --green-700: #075e46;  /* Forest Code (Markenfarbe) */
+  --green-300: #6ee7b7;  /* Mint Green (reserviert für späteres Dark Theme) */
+  --green-200: #b9e6cf;  /* Mint Line (dekorative Ränder) */
+  --green-50:  #e8fff2;  /* Mint Fog (Markenfarbe) */
+  --grey-600:  #4b635a;  /* Moss Grey */
+  --amber-400: #fbbf24;  /* Signal Amber */
+  --orange-700: #b45309; /* Rust */
+  --white:     #ffffff;
+ 
+  /* Spacing – 4er-Basis */
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem;  /*  8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem;    /* 16px */
+  --space-6: 1.5rem;  /* 24px */
+  --space-8: 2rem;    /* 32px */
+  --space-12: 3rem;   /* 48px */
+  --space-16: 4rem;   /* 64px */
+ 
+  /* Schriftfamilien */
+  --font-family-heading: "Space Grotesk", system-ui, sans-serif;
+  --font-family-body: "Inter", system-ui, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, monospace;
+ 
+  /* Schriftgrößen – Major Third (1.25), Basis 16px */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-md: 1rem;        /* 16px */
+  --font-size-lg: 1.25rem;     /* 20px */
+  --font-size-xl: 1.5625rem;   /* 25px */
+  --font-size-2xl: 1.9375rem;  /* 31px */
+  --font-size-3xl: 2.4375rem;  /* 39px */
+ 
+  /* Zeilenhöhen */
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.35;
+  --line-height-normal: 1.5;
+ 
+  /* Schriftstärken */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+ 
+  /* Radien */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  
+  
+  /* ---------------------------------------------------------
+     2. SEMANTISCHE TOKENS – Farben
+     --------------------------------------------------------- */
+	 
+  --color-bg: var(--green-50);
+  --color-surface: var(--white);
+  --color-border: var(--green-200);
+ 
+  --color-text-primary: var(--green-900);
+  --color-text-secondary: var(--grey-600);
+  --color-text-link: var(--green-700);
+ 
+  --color-action: var(--green-700);
+  --color-action-hover: var(--green-800);
+  --color-on-action: var(--white);
+ 
+  --color-accent: var(--amber-400);    /* nur als Fläche */
+  --color-on-accent: var(--green-900);
+ 
+  --color-warning: var(--orange-700);
+  --color-focus-ring: var(--green-700);
+
+
+  /* ---------------------------------------------------------
+     3. SEMANTISCHE TOKENS – Abstände
+     --------------------------------------------------------- */
+	 
+  --space-inline-tag: var(--space-2);
+  --space-card-padding: var(--space-4);
+  --space-stack-sm: var(--space-2);
+  --space-stack-md: var(--space-4);
+  --space-stack-lg: var(--space-8);
+  --space-section: var(--space-12);
+  --space-page-gutter: var(--space-4);
+
+
+  /* ---------------------------------------------------------
+     4. SEMANTISCHE TOKENS – Typografie
+     --------------------------------------------------------- */
+  --text-display: var(--font-weight-bold) var(--font-size-3xl) / var(--line-height-tight) var(--font-family-heading);
+  --text-heading-page: var(--font-weight-bold) var(--font-size-2xl) / var(--line-height-tight) var(--font-family-heading);
+  --text-heading-section: var(--font-weight-bold) var(--font-size-xl) / var(--line-height-tight) var(--font-family-heading);
+  --text-session-title: var(--font-weight-semibold) var(--font-size-lg) / var(--line-height-snug) var(--font-family-body);
+  --text-speaker-name: var(--font-weight-semibold) var(--font-size-md) / var(--line-height-snug) var(--font-family-body);
+  --text-body: var(--font-weight-regular) var(--font-size-md) / var(--line-height-normal) var(--font-family-body);
+  --text-meta: var(--font-weight-medium) var(--font-size-sm) / var(--line-height-snug) var(--font-family-body);
+  --text-time: var(--font-weight-regular) var(--font-size-sm) / var(--line-height-snug) var(--font-family-mono);
+  --text-tag: var(--font-weight-medium) var(--font-size-xs) / var(--line-height-snug) var(--font-family-mono);
+  --text-button: var(--font-weight-medium) var(--font-size-md) / var(--line-height-snug) var(--font-family-body);
+}
+
+  /* ---------------------------------------------------------
+     5. THEME-ERWEITERUNG (Struktur vorbereitet, noch nicht umgesetzt)
+     Ein Dark Theme überschreibt hier ausschließlich semantische
+     Farb-Tokens. Primitive Tokens und Komponenten bleiben unverändert.
+     --------------------------------------------------------- */
+  /*
+  [data-theme="dark"] {
+     --color-bg: var(--green-900);
+     --color-surface: var(--green-800);
+     --color-border: var(--green-700);
+     --color-text-primary: var(--green-50);
+     --color-text-secondary: var(--green-200);
+     --color-text-link: var(--green-300);
+     --color-action: var(--green-300);
+     --color-action-hover: var(--green-200);
+     --color-on-action: var(--green-900);
+     --color-focus-ring: var(--green-300);
+  }
+*/
