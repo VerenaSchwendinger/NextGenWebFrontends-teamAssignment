@@ -70,6 +70,7 @@
   --color-bg: var(--green-50);
   --color-surface: var(--white);
   --color-border: var(--green-200);
+  --color-border-strong: var(--grey-600);
  
   --color-text-primary: var(--green-900);
   --color-text-secondary: var(--grey-600);
@@ -131,5 +132,6 @@
      --color-action-hover: var(--green-200);
      --color-on-action: var(--green-900);
      --color-focus-ring: var(--green-300);
+     --color-warning: var(--amber-400);
   }
 */
