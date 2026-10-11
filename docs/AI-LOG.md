@@ -22,7 +22,7 @@ Für Entwürfe, zur Fehlersuche in unseren Dokumenten und für Startcode des Gru
 **Übernommen:** Abschnitt „Verworfene Alternativen“ (volle Objekte, Pinia, `ref` auf Modulebene, `sessionStorage`).
 **Geändert/verstanden:** Auf vier Alternativen beschränkt und die Wortgrenze geprüft. Verstanden, dass ein `ref` auf Modulebene in Nuxt serverseitig zwischen Anfragen geteilt würde.
 
-## Tokens-Architektur
+### Tokens-Architektur
 
 **Prompt:** „Fehler oder Verbesserungen in Dokument 01 und `tokens.css`?“
 **Übernommen:** Zwei fehlende Kontrastpaare, Hinweis auf 3:1 für Eingabefelder (WCAG 1.4.11), konkrete Zuordnungen im Dark-Theme-Block.
