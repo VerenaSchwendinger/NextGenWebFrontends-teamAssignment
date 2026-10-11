@@ -39,3 +39,9 @@ Für Entwürfe, zur Fehlersuche in unseren Dokumenten und für Startcode des Gru
 **Prompt:** „Ist ADR 02 / Dokument 03 so richtig?“
 **Übernommen:** Nuxt-Ordnerbaum mit `app/`, Benennungsregeln, Komponententabelle, Plugin als eigener Teilnehmer im Diagramm.
 **Geändert/verstanden:** Formulierungen selbst angepasst. Verstanden, dass Text und Diagramm dieselbe Verantwortung zeigen müssen (wer liest und schreibt den `localStorage`) und das Grundgerüst exakt der dokumentierten Struktur entsprechen muss.
+
+### Styleguide-Testseite
+
+**Prompt:** „Mach ein kleines Vue-Testprojekt, in dem wir unsere Designentscheidungen sehen.“
+**Übernommen:** Testseite mit Farben, Kontrastpaaren, Typografie, Spacing und Beispielkomponenten.
+**Geändert/verstanden:** Nur zur visuellen Prüfung der Tokens genutzt, nicht Teil der Abgabe. Dabei gesehen, dass Komponenten nur semantische Tokens brauchen.
