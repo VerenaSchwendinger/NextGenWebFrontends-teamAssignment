@@ -42,4 +42,10 @@ _Einsatz von KI (Claude, ChatGPT) bei der Planung von Ctrl Alt Meet._
 - **Prompt:** „Wie können die gewählten Filter in der URL gespeichert werden, sodass sich gefilterte Ansichten als Link teilen lassen, ohne der Rendering-ADR zu widersprechen?“
 - **Zweck:** `useSessionFilter()` um eine URL-Synchronisierung erweitern. Die Startwerte werden erst nach dem Laden im Browser aus der URL gelesen, damit der Server laut Rendering-ADR (Entscheidung 3) immer alle 20 Sessions rendert. Ungültige Werte in der URL werden ignoriert, Filterwechsel per `router.replace` ohne neue Verlaufseinträge in die Adresse geschrieben.
 
+### 2026-10-31 · Styling der Session-Übersicht
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie gestalte ich die Session-Übersicht mit unseren Design Tokens aus Dokument 01, sodass alle Karten einer Reihe gleich hoch sind und die Abstände stimmig wirken?“
+- **Zweck:** Karten, Filter, Liste und Seite ausschließlich mit semantischen Tokens stylen. Die Karten stehen in einem responsiven Raster, füllen ihre Rasterzelle (`height: 100%`) und haben die Tags per `margin-top: auto` immer unten. Zeit und Raum sind laut Markenkonzept in Monospace, die Eingabefelder haben einen Rand in Moss Grey mit ausreichendem Kontrast (WCAG 1.4.11). Die Trefferanzahl hat mehr Abstand zum Filter und steht näher an der Liste, alle Abstände kommen aus der 4-px-Skala von Dokument 01.
+
 ---

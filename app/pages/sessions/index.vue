@@ -25,3 +25,22 @@ useHead({ title: 'Sessions · Ctrl Alt Meet' })
     <SessionList :sessions="filtered" :tracks-by-id="tracksById" :rooms-by-id="roomsById" />
   </section>
 </template>
+
+<style scoped>
+.sessions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-md);
+}
+
+.sessions__title {
+  margin: 0;
+  font: var(--text-heading-page);
+}
+
+.sessions__count {
+  margin: var(--space-2) 0 calc(var(--space-2) * -1); /* more space to the filter, closer to the list */
+  font: var(--text-meta);
+  color: var(--color-text-secondary);
+}
+</style>

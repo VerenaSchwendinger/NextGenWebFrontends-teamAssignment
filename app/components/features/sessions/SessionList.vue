@@ -22,3 +22,18 @@ defineProps<{
 
   <p v-else class="session-list__empty">Keine Sessions für diese Filterkombination.</p>
 </template>
+
+<style scoped>
+.session-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.session-list__empty {
+  color: var(--color-text-secondary);
+}
+</style>
