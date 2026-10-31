@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Rendering: swr 60 (rendering ADR, decision 3), filtering happens in the browser
 const { sessions, tracks, tracksById, roomsById } = await useConferenceData()
-const { filters, options, filtered } = useSessionFilter(sessions, tracks)
+const { filters, options, filtered, reset } = useSessionFilter(sessions, tracks)
 
 useHead({ title: 'Sessions · Ctrl Alt Meet' })
 </script>
@@ -15,6 +15,7 @@ useHead({ title: 'Sessions · Ctrl Alt Meet' })
       v-model:day="filters.day"
       v-model:level="filters.level"
       :options="options"
+      @reset="reset"
     />
 
     <p class="sessions__count" aria-live="polite">

@@ -11,6 +11,8 @@ defineProps<{
 const track = defineModel<string>('track', { required: true })
 const day = defineModel<string>('day', { required: true })
 const level = defineModel<string>('level', { required: true })
+
+defineEmits<{ reset: [] }>()
 </script>
 
 <template>
@@ -38,5 +40,9 @@ const level = defineModel<string>('level', { required: true })
         <option v-for="o in options.levels" :key="o.value" :value="o.value">{{ o.label }}</option>
       </select>
     </label>
+
+    <button type="button" class="session-filter__reset" @click="$emit('reset')">
+      Filter zurücksetzen
+    </button>
   </form>
 </template>

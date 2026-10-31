@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-  <ul class="session-list">
+  <ul v-if="sessions.length" class="session-list">
     <li v-for="session in sessions" :key="session.id">
       <SessionCard
         :session="session"
@@ -19,4 +19,6 @@ defineProps<{
       />
     </li>
   </ul>
+
+  <p v-else class="session-list__empty">Keine Sessions für diese Filterkombination.</p>
 </template>

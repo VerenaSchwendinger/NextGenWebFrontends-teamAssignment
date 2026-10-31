@@ -39,5 +39,11 @@ export function useSessionFilter(
       .sort((a, b) => (a.day + a.startTime).localeCompare(b.day + b.startTime)),
   )
 
-  return { filters, options, filtered }
+    function reset() {
+    filters.track = ''
+    filters.day = ''
+    filters.level = ''
+  }
+
+  return { filters, options, filtered, reset }
 }
