@@ -1,14 +1,14 @@
 <script setup lang="ts">
-const { sessions } = await useConferenceData()
+const { sessions, tracksById, roomsById } = await useConferenceData()
+
+const sorted = computed(() =>
+  [...sessions].sort((a, b) => (a.day + a.startTime).localeCompare(b.day + b.startTime)),
+)
 </script>
 
 <template>
   <section>
     <h1>Sessions</h1>
-    <ul>
-      <li v-for="session in sessions" :key="session.id">
-        <NuxtLink :to="`/sessions/${session.id}`">{{ session.title }}</NuxtLink>
-      </li>
-    </ul>
+    <SessionList :sessions="sorted" :tracks-by-id="tracksById" :rooms-by-id="roomsById" />
   </section>
 </template>
