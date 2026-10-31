@@ -57,6 +57,9 @@ watch(() => route.fullPath, close)
 
 <style scoped>
 .app-header {
+  position: sticky; /* stays at the top while the page scrolls */
+  top: 0;
+  z-index: 10; /* above cards and other content */
   display: flex;
   flex-wrap: wrap;
   align-items: center;
