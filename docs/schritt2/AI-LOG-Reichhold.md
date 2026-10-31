@@ -66,4 +66,22 @@ _Einsatz von KI (Claude) bei der Umsetzung von Ctrl Alt Meet._
 - **Prompt** „ai log erstellen“
 - **Zweck** Die Einträge aus dem Verlauf zusammenstellen. Inhalt und Daten habe ich anschließend selbst geprüft.
 
+### 2026-10-31 · Code mit den Docs abgleichen
+
+- **Tool** Claude Code (VS Code)
+- **Prompt** „bitte überprüfe auf fehler, ob alles mit den angaben in den docs zusammenstimmt“
+- **Zweck** Prüfen, ob die Umsetzung den Dokumenten 02, 03 und der ADR entspricht. Gefunden wurden unter anderem der fehlende Abgleich zwischen Tabs über das `storage`-Event und Abweichungen zu Dokument 03, die noch nicht dokumentiert waren.
+
+### 2026-10-31 · Abweichungen in der ADR nachtragen
+
+- **Tool** Claude Code (VS Code)
+- **Prompt** „bitte ergänze in 01-rendering-strategie-adr.md“
+- **Zweck** Die Abweichungen nicht stillschweigend lassen, sondern in der ADR nachtragen: den Ladezustand `ready` mit gesperrtem Button und dass die `SessionCard` den Programm-Button nur über einen Slot bekommt.
+
+### 2026-10-31 · Abschlussprüfung vor der Abgabe
+
+- **Tool** Claude Code (VS Code)
+- **Prompt** „pls final run, alles okay und stimmt mit den docs und angabe überein“ [Angabe Schritt 2 eingefügt]
+- **Zweck** Alle Teile A bis F gegen die Angabe prüfen und alle Routen im Production-Build testen. Dabei wurden der Codeblock in der ADR an `nuxt.config.ts` angeglichen und ein kaputter Link im README korrigiert.
+
 ---
