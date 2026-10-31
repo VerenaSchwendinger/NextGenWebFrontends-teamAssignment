@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { DeepReadonly } from 'vue'
-import type { Speaker } from '~/composables/useConferenceData'
+import type { Session, Speaker } from '~/composables/useConferenceData'
 
 defineProps<{
   speaker: DeepReadonly<Speaker>
+  sessions: readonly DeepReadonly<Session>[]
 }>()
 </script>
 
@@ -18,6 +19,19 @@ defineProps<{
     <section class="speaker-profile__section">
       <h2 class="speaker-profile__heading">Bio</h2>
       <p class="speaker-profile__bio">{{ speaker.bio }}</p>
+    </section>
+
+    <section class="speaker-profile__section">
+      <h2 class="speaker-profile__heading">
+        {{ sessions.length === 1 ? 'Session' : 'Sessions' }}
+      </h2>
+
+      <!-- Only title and link: profiles are prerendered, time and room could be outdated (rendering ADR, decision 1) -->
+      <ul class="speaker-profile__sessions">
+        <li v-for="session in sessions" :key="session.id">
+          <NuxtLink :to="`/sessions/${session.id}`">{{ session.title }}</NuxtLink>
+        </li>
+      </ul>
     </section>
   </article>
 </template>
@@ -65,5 +79,14 @@ defineProps<{
 
 .speaker-profile__bio {
   margin: 0;
+}
+
+.speaker-profile__sessions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 </style>
