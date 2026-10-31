@@ -64,7 +64,7 @@ useSeoMeta({ description: session.abstract })
       </div>
     </dl>
 
-    <!-- Part E adds the AddToProgramButton here -->
+    <AddToProgramButton :session-id="session.id" :session-title="session.title" />
 
     <section class="session-detail__section">
       <h2 class="session-detail__heading">Abstract</h2>
