@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const links = [
   { to: '/sessions', label: 'Sessions' },
-  //{ to: '/speakers', label: 'Speaker' },
+  { to: '/speakers', label: 'Speaker' },
   //{ to: '/my-program', label: 'Mein Programm' },
 ]
 
