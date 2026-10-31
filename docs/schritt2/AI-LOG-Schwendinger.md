@@ -17,4 +17,11 @@ _Einsatz von KI (Claude, ChatGPT) bei der Planung von Ctrl Alt Meet._
 - **Tool:** Claude (claude.ai)
 - **Prompt:** „Welche inhaltlichen Änderungen sind in unserer Rendering-Strategie-ADR noch notwendig, damit sie die Anforderungen der Angabe erfüllt?“
 - **Zweck:** Eine priorisierte Fehlerliste bekommen. Wichtigster Befund: Die ISR-Simulation funktioniert mit beim Build eingebundenen Daten nicht und muss als Abweichung von Dokument 03 nachgetragen werden.
+
+### 2026-10-31 · Hamburger-Menü für die Navigation
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie baue ich für die Navigation ein barrierefreies Hamburger-Menü für mobile Geräte?“
+- **Zweck:** Auf kleinen Bildschirmen Platz im Header sparen. Das Menü sollte per Tastatur und Screenreader bedienbar sein (`aria-expanded`, Esc zum Schließen, Tippflächen von 44 px) und sich nach einem Seitenwechsel automatisch schließen.
+
 ---
