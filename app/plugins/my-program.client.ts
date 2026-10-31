@@ -61,5 +61,5 @@ export default defineNuxtPlugin((nuxtApp) => {
       if (event.key !== PROGRAM_STORAGE_KEY) return
       ids.value = sanitize(readStoredIds(), valid)
     })
-    })
   })
+})

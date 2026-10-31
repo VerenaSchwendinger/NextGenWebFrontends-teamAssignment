@@ -133,6 +133,14 @@ Dokument 03 sah vor, `conference-data.json` beim Build einzubinden. Bei der Umse
 
 Vorgerenderte Speaker-Seiten enthalten die Daten vom Build. Damit sie beim Weiterklicken keine veralteten Zeiten an die Session-Seiten weitergeben, verwendet `useConferenceData()` gecachte Daten nur beim ersten Laden (`getCachedData`) und lädt bei jedem Seitenwechsel neu. Daraus folgt für die ISR-Simulation: Die Verzögerung von bis zu 60 Sekunden gilt nur beim direkten Aufruf oder Neuladen einer Session-Seite, weil der Server dann die gecachte Fassung liefert. Wer innerhalb der App navigiert, erhält die Daten direkt von `/api/conference` und sieht eine Zeitänderung sofort. Für die Simulation laden wir die Seite deshalb direkt neu.
 
+### Ladezustand `ready` (Ergänzung zu Dokument 03)
+
+Neben `has`, `toggle`, `count` und `sessions` liefert `useMyProgram()` zusätzlich `ready`. Das Plugin setzt es, sobald die gespeicherten IDs aus dem `localStorage` geladen und bereinigt sind. Bis dahin ist der `AddToProgramButton` gesperrt, weil ein früher Klick das gespeicherte Programm überschreiben würde. Der Zähler im Header erscheint erst danach, und „Mein Programm“ zeigt so lange den Ladehinweis aus Entscheidung 4.
+
+### Programm-Button über einen Slot (Abweichung von Dokument 03)
+
+Dokument 03 nennt `SessionCard` unter den Komponenten, die `useMyProgram()` aufrufen. Tatsächlich kennt die Karte das Composable nicht. Sie bietet einen Slot `actions`, in den `SessionList` und „Mein Programm“ den `AddToProgramButton` einsetzen, und erst dieser ruft `useMyProgram()` auf. So bleibt die Karte reine Darstellung, und der Button reagiert trotzdem an allen Stellen gleichzeitig.
+
 ### Neuer Ordner `server/` (Ergänzung zu ADR 02)
 
 Für die Server-Route kommt auf oberster Ebene der Ordner `server/api/` hinzu, den der Ordnerbaum in ADR 02 noch nicht enthält.
