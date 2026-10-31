@@ -55,7 +55,7 @@ Wir wählen ISR mit 60 Sekunden. Die Option `isr` funktioniert nur auf Hosts wie
  
 #### Konsequenzen
  
-Die Seite ist fast so schnell wie SSG und trotzdem aktuell. Nach Ablauf der 60 Sekunden erhält der nächste Aufruf noch die alte Fassung und stößt den Neubau an, erst der folgende zeigt die neue Zeit. Für einen Zeitplan reicht das. Der Cache greift nur im Production-Build, darum testen wir mit `npm run build` und `npm run preview`. Das gecachte HTML enthält keine persönlichen Daten, weil „Mein Programm“ laut Dokument 03 erst im Browser befüllt wird. Programm-Button und Zähler im Header funktionieren daher auch auf gecachten Seiten.
+Die Seite ist fast so schnell wie SSG und trotzdem aktuell. Nach Ablauf der 60 Sekunden erhält der nächste Aufruf noch die alte Fassung und stößt den Neubau an, erst der folgende zeigt die neue Zeit. Für einen Zeitplan reicht das. Der Cache greift nur im Production-Build (`npm run build` und `npm run preview`). Das gecachte HTML enthält keine persönlichen Daten, weil „Mein Programm“ laut Dokument 03 erst im Browser befüllt wird. Programm-Button und Zähler im Header funktionieren daher auch auf gecachten Seiten.
 
 ### Entscheidung 3: Session-Übersicht mit Filtern
 #### Kontext
@@ -109,7 +109,7 @@ export default defineNuxtConfig({
     '/':            { prerender: true },                    // SSG, Startseite
     '/speakers':    { prerender: true },                    // SSG, Liste aller Speaker
     '/speakers/**': { prerender: true },                    // SSG, Profile
-    '/sessions':    { swr: 60 },                            // ISR-Prinzip, Übersicht
+    '/sessions':    { swr: 60, prerender: false },                            // ISR-Prinzip, Übersicht
     '/sessions/**': { swr: 60, prerender: false },          // ISR-Prinzip, nie statisch
     '/my-program':  { ssr: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
   },
@@ -122,16 +122,16 @@ export default defineNuxtConfig({
 })
 ```
 
-`prerender: false` verhindert, dass der Prerender-Crawler die Detailseiten über die Links der Speaker-Profile statisch erzeugt. Alle Seiten lesen ihre Daten ausschließlich über `useConferenceData()`, das sie von `/api/conference` lädt. Keine Seite liest `conference-data.json` selbst. So bleibt die Rendering-Strategie austauschbar, ohne dass sich die Datenschicht ändert.
+`prerender: false` verhindert, dass der Prerender-Crawler Seiten statisch erzeugt, die er über Links auf vorgerenderten Seiten findet: die Detailseiten über die Speaker-Profile sowie Übersicht und „Mein Programm“ über die Navigation im Header. Sonst läge eine statische Datei vor, und `swr: 60` bzw. `ssr: false` würden nicht greifen. Alle Seiten lesen ihre Daten ausschließlich über `useConferenceData()`, das sie von `/api/conference` lädt. Keine Seite liest `conference-data.json` selbst. So bleibt die Rendering-Strategie austauschbar, ohne dass sich die Datenschicht ändert.
 
 ## Nachträge und Abweichungen
 ### Datenschicht liest zur Laufzeit (Abweichung von Dokument 03)
 
-Dokument 03 sah vor, `conference-data.json` beim Build einzubinden. Bei der Umsetzung von Entscheidung 2 zeigte sich, dass die Daten damit im Bundle eingefroren sind. Eine Änderung im laufenden Preview-Server käme nie an, die ISR-Simulation wäre wirkungslos. Deshalb liest die Server-Route `/api/conference` die Datei zur Laufzeit aus `app/data/`, und `useConferenceData()` lädt sie von dort. Das Composable liefert weiterhin Sessions, Speaker und Lookups, ist aber asynchron, die Seiten rufen es daher mit `await` auf.
+Dokument 03 sah vor, `conference-data.json` beim Build einzubinden. Bei der Umsetzung von Entscheidung 2 zeigte sich, dass die Daten damit im Bundle eingefroren sind. Eine Änderung im laufenden Preview-Server käme nie an, die ISR-Simulation wäre wirkungslos. Deshalb liest die Server-Route `/api/conference` die Datei zur Laufzeit aus `app/data/`, und `useConferenceData()` lädt sie von dort. Das Composable liefert weiterhin Sessions, Speaker und Lookups, ist aber asynchron, die Seiten rufen es daher mit `await` auf. Das Plugin `my-program.client.ts` und `useMyProgram()` greifen über `useNuxtData('conference')` auf denselben, bereits von `useConferenceData()` geladenen Datensatz zu, statt eine eigene Datenquelle aufzubauen. Nur wenn die aktuelle Seite den Datensatz noch nicht geladen hat, holt das Plugin ihn einmalig selbst von `/api/conference`, um gespeicherte IDs zu prüfen.
 
 ### Daten beim Seitenwechsel neu laden
 
-Vorgerenderte Speaker-Seiten enthalten die Daten vom Build. Damit sie beim Weiterklicken keine veralteten Zeiten an die Session-Seiten weitergeben, verwendet `useConferenceData()` gecachte Daten nur beim ersten Laden (`getCachedData`) und lädt bei jedem Seitenwechsel neu.
+Vorgerenderte Speaker-Seiten enthalten die Daten vom Build. Damit sie beim Weiterklicken keine veralteten Zeiten an die Session-Seiten weitergeben, verwendet `useConferenceData()` gecachte Daten nur beim ersten Laden (`getCachedData`) und lädt bei jedem Seitenwechsel neu. Daraus folgt für die ISR-Simulation: Die Verzögerung von bis zu 60 Sekunden gilt nur beim direkten Aufruf oder Neuladen einer Session-Seite, weil der Server dann die gecachte Fassung liefert. Wer innerhalb der App navigiert, erhält die Daten direkt von `/api/conference` und sieht eine Zeitänderung sofort. Für die Simulation laden wir die Seite deshalb direkt neu.
 
 ### Neuer Ordner `server/` (Ergänzung zu ADR 02)
 

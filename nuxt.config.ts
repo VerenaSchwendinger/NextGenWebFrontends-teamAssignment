@@ -31,9 +31,9 @@ export default defineNuxtConfig({
     '/':            { prerender: true },                    // SSG, home page
     '/speakers':    { prerender: true },                    // SSG, speaker list
     '/speakers/**': { prerender: true },                    // SSG, profiles
-    '/sessions':    { swr: 60 },                            // ISR principle, overview
+    '/sessions':    { swr: 60, prerender: false },          // ISR principle, overview, never static
     '/sessions/**': { swr: 60, prerender: false },          // ISR principle, never static
-    '/my-program':  { ssr: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
+    '/my-program':  { ssr: false, prerender: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
   },
 
   nitro: {

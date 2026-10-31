@@ -55,5 +55,11 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     // Exactly one watcher for the whole app (document 03)
     watch(ids, (value) => writeIds(value))
+
+    // Sync changes from other tabs (document 03)
+    window.addEventListener('storage', (event) => {
+      if (event.key !== PROGRAM_STORAGE_KEY) return
+      ids.value = sanitize(readStoredIds(), valid)
+    })
     })
   })
