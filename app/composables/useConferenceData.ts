@@ -1,5 +1,3 @@
-import rawData from '~/data/conference-data.json'
-
 // Types mirror the structure of conference-data.json
 export interface Conference {
   name: string
