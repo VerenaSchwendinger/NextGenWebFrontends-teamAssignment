@@ -53,8 +53,15 @@ export interface ConferenceData {
 // The shared key makes all callers on a page reuse one request, and the result
 // is transferred to the client in the payload, so hydration does not refetch.
 export async function useConferenceData() {
-  const { data } = await useAsyncData('conference', () =>
-    $fetch<ConferenceData>('/api/conference'),
+    const { data } = await useAsyncData(
+    'conference',
+    () => $fetch<ConferenceData>('/api/conference'),
+    {
+      // Reuse data only while hydrating, always refetch on client navigation,
+      // so prerendered pages never hand outdated times to swr pages
+      getCachedData: (key, nuxtApp) =>
+        nuxtApp.isHydrating ? nuxtApp.payload.data[key] : undefined,
+    },
   )
 
   if (!data.value) {

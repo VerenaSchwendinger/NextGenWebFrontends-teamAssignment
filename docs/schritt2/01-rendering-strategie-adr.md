@@ -95,7 +95,7 @@ Wir wählen CSR (`ssr: false`). Die entscheidenden Daten existieren nur im Brows
  
 #### Konsequenzen
  
-Der Server arbeitet pro Aufruf nicht und erhält keine persönlichen Daten. Bis das JavaScript geladen ist, sieht man nur eine Hülle, darum zeigen wir einen Ladehinweis statt einer weißen Fläche. Die Seite ist bewusst nicht indexierbar (`noindex`). Zeit und Raum kommen aus derselben Datenschicht wie bei den Detailseiten. Eine Zeitplanänderung erscheint deshalb auch hier, und die gemerkten Sessions bleiben über einen Reload hinweg erhalten.
+Der Server arbeitet pro Aufruf nicht und erhält keine persönlichen Daten. Bis das Programm aus dem localStorage gelesen ist, zeigt die Seite einen Ladehinweis statt einer leeren Liste. Die Seite ist bewusst nicht indexierbar (`noindex`). Zeit und Raum kommen aus derselben Datenschicht wie bei den Detailseiten. Eine Zeitplanänderung erscheint deshalb auch hier, und die gemerkten Sessions bleiben über einen Reload hinweg erhalten.
 
 ## Umsetzung
  
@@ -128,6 +128,14 @@ export default defineNuxtConfig({
 ### Datenschicht liest zur Laufzeit (Abweichung von Dokument 03)
 
 Dokument 03 sah vor, `conference-data.json` beim Build einzubinden. Bei der Umsetzung von Entscheidung 2 zeigte sich, dass die Daten damit im Bundle eingefroren sind. Eine Änderung im laufenden Preview-Server käme nie an, die ISR-Simulation wäre wirkungslos. Deshalb liest die Server-Route `/api/conference` die Datei zur Laufzeit aus `app/data/`, und `useConferenceData()` lädt sie von dort. Das Composable liefert weiterhin Sessions, Speaker und Lookups, ist aber asynchron, die Seiten rufen es daher mit `await` auf.
+
+### Daten beim Seitenwechsel neu laden
+
+Vorgerenderte Speaker-Seiten enthalten die Daten vom Build. Damit sie beim Weiterklicken keine veralteten Zeiten an die Session-Seiten weitergeben, verwendet `useConferenceData()` gecachte Daten nur beim ersten Laden (`getCachedData`) und lädt bei jedem Seitenwechsel neu.
+
+### Neuer Ordner `server/` (Ergänzung zu ADR 02)
+
+Für die Server-Route kommt auf oberster Ebene der Ordner `server/api/` hinzu, den der Ordnerbaum in ADR 02 noch nicht enthält.
 
 ---
 

@@ -68,17 +68,21 @@ defineEmits<{ reset: [] }>()
   padding: var(--space-2);
   color: var(--color-text-primary);
   background: var(--color-surface);
-  border: 1px solid var(--color-text-secondary); /* WCAG 1.4.11, see document 01 */
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-sm);
 }
 
 .session-filter__reset {
-  font: var(--text-meta);
+  font: var(--text-button);
   padding: var(--space-2) var(--space-4);
   color: var(--color-on-action);
   background: var(--color-action);
   border: 0;
   border-radius: var(--radius-sm);
   cursor: pointer;
+}
+
+.session-filter__reset:hover {
+  background: var(--color-action-hover);
 }
 </style>

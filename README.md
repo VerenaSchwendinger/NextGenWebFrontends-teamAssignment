@@ -4,7 +4,7 @@ Konferenzplattform für die FrontendNow, Projektarbeit in der LV NextGen Web Fro
 
 ## Voraussetzungen
 
-- Node.js 20 oder neuer
+- Node.js 22.22.3 oder neuer, empfohlen 24 LTS
 - npm
 
 ## Setup

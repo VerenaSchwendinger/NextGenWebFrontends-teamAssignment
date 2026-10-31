@@ -1,10 +1,8 @@
-# AI-Log Schritt 1
+# AI-Log Schwendinger Schritt 2
 
-_Einsatz von KI (Claude, ChatGPT) bei der Planung von Ctrl Alt Meet._
+_Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
 
 ---
-
-## Wofür ich KI genutzt habe
 
 ### 2026-10-30 · ADR mit Schritt 1 abgleichen
 
@@ -59,5 +57,17 @@ _Einsatz von KI (Claude, ChatGPT) bei der Planung von Ctrl Alt Meet._
 - **Tool:** Claude (claude.ai)
 - **Prompt:** „Wie baue ich die Profilseite unter /speakers/[id] mit einer SpeakerProfile-Komponente laut ADR 02?“
 - **Zweck:** Für jeden der 18 Speaker eine eigene Seite mit Name, Titel, Firma und Bio erstellen. Die Darstellung liegt in der Feature-Komponente `SpeakerProfile`, die Seite lädt nur die Daten über `useConferenceData()` und gibt bei unbekannter ID einen 404-Fehler aus.
+
+### 2026-10-31 · Sessions auf den Speaker-Profilen
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie zeige ich auf dem Speaker-Profil die Sessions der Person so an, wie es unsere Rendering-ADR vorgibt?“
+- **Zweck:** Die Sessions jedes Speakers als Links zur Detailseite anzeigen, abgeleitet aus `sessions[].speakerIds` als einziger Quelle für die Zuordnung. Bewusst nur mit Titel, ohne Zeit und Raum, weil die vorgerenderten Profile sonst nach einer Zeitplanänderung veraltete Angaben zeigen würden.
+
+### 2026-10-31 · Veraltete Daten bei Seitenwechsel beheben
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Gibt es noch Unstimmigkeiten oder Fehler im Projekt?“
+- **Zweck:** Gesamtprüfung von Code, Dokumentation und AI-LOG vor der Abgabe. Dabei wurde ein Fehler gefunden: Vorgerenderte Speaker-Seiten konnten beim Weiterklicken veraltete Uhrzeiten an die Session-Seiten weitergeben, was der Rendering-ADR (Entscheidung 2) widerspricht. Gelöst mit `getCachedData` in `useConferenceData()`, damit die Daten beim Seitenwechsel neu geladen werden.
 
 ---

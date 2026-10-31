@@ -31,7 +31,7 @@ defineProps<{
 
 .speaker-card__name {
   margin: 0 0 var(--space-1);
-  font: var(--text-session-title);
+  font: var(--text-speaker-name);
 }
 
 .speaker-card__role {
