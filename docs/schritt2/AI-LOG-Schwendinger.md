@@ -67,7 +67,7 @@ _Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
 ### 2026-10-31 · Veraltete Daten bei Seitenwechsel beheben
 
 - **Tool:** Claude (claude.ai)
-- **Prompt:** „Gibt es außer Aufgabe E noch Unstimmigkeiten oder Fehler im Projekt?“
+- **Prompt:** „Gibt es noch Unstimmigkeiten oder Fehler im Projekt?“
 - **Zweck:** Gesamtprüfung von Code, Dokumentation und AI-LOG vor der Abgabe. Dabei wurde ein Fehler gefunden: Vorgerenderte Speaker-Seiten konnten beim Weiterklicken veraltete Uhrzeiten an die Session-Seiten weitergeben, was der Rendering-ADR (Entscheidung 2) widerspricht. Gelöst mit `getCachedData` in `useConferenceData()`, damit die Daten beim Seitenwechsel neu geladen werden.
 
 ---
