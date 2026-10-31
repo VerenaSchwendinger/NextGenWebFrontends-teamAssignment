@@ -54,4 +54,10 @@ _Einsatz von KI (Claude, ChatGPT) bei der Planung von Ctrl Alt Meet._
 - **Prompt:** „Wie baue ich die Speaker-Übersicht mit einer eigenen SpeakerCard laut ADR 02 und sortiere die Speaker nach Nachnamen?“
 - **Zweck:** Die Liste aller 18 Speaker als Raster aus `SpeakerCard`-Komponenten darstellen, alphabetisch nach Nachnamen sortiert und gestaltet wie die Session-Übersicht, damit beide Seiten einheitlich wirken.
 
+### 2026-10-31 · Speaker-Profilseite mit SpeakerProfile
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie baue ich die Profilseite unter /speakers/[id] mit einer SpeakerProfile-Komponente laut ADR 02?“
+- **Zweck:** Für jeden der 18 Speaker eine eigene Seite mit Name, Titel, Firma und Bio erstellen. Die Darstellung liegt in der Feature-Komponente `SpeakerProfile`, die Seite lädt nur die Daten über `useConferenceData()` und gibt bei unbekannter ID einen 404-Fehler aus.
+
 ---
