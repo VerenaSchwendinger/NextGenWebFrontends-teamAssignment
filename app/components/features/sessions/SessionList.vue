@@ -12,11 +12,15 @@ defineProps<{
 <template>
   <ul v-if="sessions.length" class="session-list">
     <li v-for="session in sessions" :key="session.id">
-      <SessionCard
+            <SessionCard
         :session="session"
         :track="tracksById.get(session.trackId)"
         :room="roomsById.get(session.roomId)"
-      />
+      >
+        <template #actions>
+          <AddToProgramButton :session-id="session.id" :session-title="session.title" />
+        </template>
+      </SessionCard>
     </li>
   </ul>
 

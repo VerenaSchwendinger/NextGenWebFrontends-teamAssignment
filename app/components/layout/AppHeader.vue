@@ -2,8 +2,11 @@
 const links = [
   { to: '/sessions', label: 'Sessions' },
   { to: '/speakers', label: 'Speaker' },
-  //{ to: '/my-program', label: 'Mein Programm' },
+  { to: '/my-program', label: 'Mein Programm' },
 ]
+
+// Counter badge for the program link
+const { count, ready } = useMyProgram()
 
 const route = useRoute()
 const isOpen = ref(false)
@@ -48,7 +51,16 @@ watch(() => route.fullPath, close)
     >
       <ul class="app-header__nav">
         <li v-for="link in links" :key="link.to">
-          <NuxtLink :to="link.to" class="app-header__link">{{ link.label }}</NuxtLink>
+          <NuxtLink :to="link.to" class="app-header__link">
+            {{ link.label }}
+            <span
+              v-if="link.to === '/my-program' && ready && count"
+              class="app-header__badge"
+            >
+              {{ count }}
+              <span class="app-header__sr-only">gemerkt</span>
+            </span>
+          </NuxtLink>
         </li>
       </ul>
     </nav>
@@ -102,6 +114,19 @@ watch(() => route.fullPath, close)
 .app-header__link:hover,
 .app-header__link.router-link-active {
   border-bottom-color: var(--color-on-action);
+}
+
+/* Number of saved sessions, Signal Amber with dark text (document 01) */
+.app-header__badge {
+  display: inline-block;
+  min-width: 1.5em;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-1);
+  font: var(--text-tag);
+  text-align: center;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
 }
 
 /* Hamburger button, hidden on large screens */
