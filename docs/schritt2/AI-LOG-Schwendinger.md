@@ -48,4 +48,10 @@ _Einsatz von KI (Claude, ChatGPT) bei der Planung von Ctrl Alt Meet._
 - **Prompt:** „Wie gestalte ich die Session-Übersicht mit unseren Design Tokens aus Dokument 01, sodass alle Karten einer Reihe gleich hoch sind und die Abstände stimmig wirken?“
 - **Zweck:** Karten, Filter, Liste und Seite ausschließlich mit semantischen Tokens stylen. Die Karten stehen in einem responsiven Raster, füllen ihre Rasterzelle (`height: 100%`) und haben die Tags per `margin-top: auto` immer unten. Zeit und Raum sind laut Markenkonzept in Monospace, die Eingabefelder haben einen Rand in Moss Grey mit ausreichendem Kontrast (WCAG 1.4.11). Die Trefferanzahl hat mehr Abstand zum Filter und steht näher an der Liste, alle Abstände kommen aus der 4-px-Skala von Dokument 01.
 
+### 2026-10-31 · Speaker-Übersicht mit SpeakerCard
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie baue ich die Speaker-Übersicht mit einer eigenen SpeakerCard laut ADR 02 und sortiere die Speaker nach Nachnamen?“
+- **Zweck:** Die Liste aller 18 Speaker als Raster aus `SpeakerCard`-Komponenten darstellen, alphabetisch nach Nachnamen sortiert und gestaltet wie die Session-Übersicht, damit beide Seiten einheitlich wirken.
+
 ---
