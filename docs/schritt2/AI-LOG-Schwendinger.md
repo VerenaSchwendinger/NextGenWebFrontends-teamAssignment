@@ -24,4 +24,22 @@ _Einsatz von KI (Claude, ChatGPT) bei der Planung von Ctrl Alt Meet._
 - **Prompt:** „Wie baue ich für die Navigation ein barrierefreies Hamburger-Menü für mobile Geräte?“
 - **Zweck:** Auf kleinen Bildschirmen Platz im Header sparen. Das Menü sollte per Tastatur und Screenreader bedienbar sein (`aria-expanded`, Esc zum Schließen, Tippflächen von 44 px) und sich nach einem Seitenwechsel automatisch schließen.
 
+### 2026-10-31 · Teil B passend zu den ADRs planen
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Was muss ich bei Aufgabe B umsetzen, damit die Session-Übersicht zu unseren ADRs passt?“
+- **Zweck:** Klären, welche Vorgaben aus ADR 02 (headless `useSessionFilter()`, Komponentenschichten), Dokument 01 (Design Tokens) und der Rendering-ADR (Filtern im Browser, `swr: 60`) für die Übersicht gelten, bevor wir mit dem Code beginnen.
+
+### 2026-10-31 · Compile-Fehler beheben
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Beim Start von `npm run dev` erscheint ein CssSyntaxError in `SessionCard.vue` bzw. `sessions/index.vue`. Woran liegt das?“
+- **Zweck:** Die Ursache des Fehlers finden. Ergebnis: Der Code war in den vom Editor automatisch erzeugten `<style scoped>`-Block eingefügt worden. Gelöst durch komplettes Ersetzen des Dateiinhalts und Leeren des Nuxt-Caches.
+
+### 2026-10-31 · Filter in der URL teilbar machen
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie können die gewählten Filter in der URL gespeichert werden, sodass sich gefilterte Ansichten als Link teilen lassen, ohne der Rendering-ADR zu widersprechen?“
+- **Zweck:** `useSessionFilter()` um eine URL-Synchronisierung erweitern. Die Startwerte werden erst nach dem Laden im Browser aus der URL gelesen, damit der Server laut Rendering-ADR (Entscheidung 3) immer alle 20 Sessions rendert. Ungültige Werte in der URL werden ignoriert, Filterwechsel per `router.replace` ohne neue Verlaufseinträge in die Adresse geschrieben.
+
 ---
