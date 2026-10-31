@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { conference, sessions, speakers, tracks } = useConferenceData()
+const { conference, sessions, speakers, tracks } = await useConferenceData()
 
 // Format "2026-09-15" and "2026-09-16" as a readable German date range
 const dateFormatter = new Intl.DateTimeFormat('de-AT', {

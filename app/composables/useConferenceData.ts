@@ -51,25 +51,30 @@ export interface ConferenceData {
   sessions: Session[]
 }
 
-// Static dataset, bundled at build time and never mutated at runtime
-const data = rawData as ConferenceData
+// Loads the dataset at runtime from /api/conference (see rendering ADR, Nachträge).
+// The shared key makes all callers on a page reuse one request, and the result
+// is transferred to the client in the payload, so hydration does not refetch.
+export async function useConferenceData() {
+  const { data } = await useAsyncData('conference', () =>
+    $fetch<ConferenceData>('/api/conference'),
+  )
 
-// Lookup maps, built once so detail pages do not have to search arrays
-const sessionsById = new Map(data.sessions.map((s) => [s.id, s]))
-const speakersById = new Map(data.speakers.map((s) => [s.id, s]))
-const tracksById = new Map(data.tracks.map((t) => [t.id, t]))
-const roomsById = new Map(data.rooms.map((r) => [r.id, r]))
+  if (!data.value) {
+    throw createError({ statusCode: 500, statusMessage: 'Konferenzdaten nicht verfügbar' })
+  }
 
-export function useConferenceData() {
+  const current = data.value
+
+  // Lookup maps, so detail pages do not have to search arrays
   return {
-    conference: readonly(data.conference),
-    sessions: readonly(data.sessions),
-    speakers: readonly(data.speakers),
-    tracks: readonly(data.tracks),
-    rooms: readonly(data.rooms),
-    sessionsById,
-    speakersById,
-    tracksById,
-    roomsById,
+    conference: readonly(current.conference),
+    sessions: readonly(current.sessions),
+    speakers: readonly(current.speakers),
+    tracks: readonly(current.tracks),
+    rooms: readonly(current.rooms),
+    sessionsById: new Map(current.sessions.map((s) => [s.id, s])),
+    speakersById: new Map(current.speakers.map((s) => [s.id, s])),
+    tracksById: new Map(current.tracks.map((t) => [t.id, t])),
+    roomsById: new Map(current.rooms.map((r) => [r.id, r])),
   }
 }
