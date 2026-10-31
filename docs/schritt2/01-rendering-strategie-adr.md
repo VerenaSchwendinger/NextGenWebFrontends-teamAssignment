@@ -109,9 +109,9 @@ export default defineNuxtConfig({
     '/':            { prerender: true },                    // SSG, Startseite
     '/speakers':    { prerender: true },                    // SSG, Liste aller Speaker
     '/speakers/**': { prerender: true },                    // SSG, Profile
-    '/sessions':    { swr: 60, prerender: false },                            // ISR-Prinzip, Übersicht
+    '/sessions':    { swr: 60, prerender: false },          // ISR-Prinzip, Übersicht, nie statisch
     '/sessions/**': { swr: 60, prerender: false },          // ISR-Prinzip, nie statisch
-    '/my-program':  { ssr: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
+    '/my-program':  { ssr: false, prerender: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
   },
   nitro: {
     prerender: {
