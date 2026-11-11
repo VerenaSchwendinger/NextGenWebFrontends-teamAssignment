@@ -61,6 +61,7 @@ export default defineNuxtConfig({
       short_name: 'Ctrl Alt Meet',
       description: 'Der Shortcut durch die FrontendNow',
       lang: 'de',
+      id: '/',
       start_url: '/',
       scope: '/',
       display: 'standalone',
