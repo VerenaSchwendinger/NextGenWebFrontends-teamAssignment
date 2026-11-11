@@ -64,6 +64,7 @@ watch(() => route.fullPath, close)
         </li>
       </ul>
     </nav>
+    <img src="/logo.svg" alt="" class="app-header__mark" width="40" height="40" />
   </header>
 </template>
 
@@ -87,6 +88,17 @@ watch(() => route.fullPath, close)
   gap: var(--space-2);
   text-decoration: none;
 }
+
+.app-header__mark {
+  display: block;
+  width: 2.5rem;  /* 40px, same height as the keycaps */
+  height: 2.5rem;
+}
+
+.app-header__nav-wrap {
+  margin-left: auto;
+}
+
 
 .app-header__name {
   font: var(--text-heading-section);
@@ -198,13 +210,21 @@ watch(() => route.fullPath, close)
 
 /* Small screens: hamburger button, menu opens below the logo */
 @media (max-width: 40rem) {
-  .app-header__toggle {
-    display: inline-flex;
+  .app-header__mark {
+    order: 1;
+    margin-left: auto;
   }
 
-  .app-header__nav-wrap {
+  .app-header__toggle {
+    display: inline-flex;
+    order: 2;
+  }
+
+    .app-header__nav-wrap {
     display: none;
     width: 100%;
+    margin-left: 0;
+    order: 3;
   }
 
   .app-header__nav-wrap--open {
