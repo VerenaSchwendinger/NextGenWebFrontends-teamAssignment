@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  // PWA module: manifest + service worker (Workbox), see docs/schritt3/01-pwa-setup.md
+  modules: ['@vite-pwa/nuxt'],
+
   // Global design tokens from /tokens (~~ points to the project root)
   css: ['~~/tokens/tokens.css'],
 
@@ -15,6 +18,10 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'de' },
       title: 'Ctrl Alt Meet',
+      meta: [
+        // Browser UI colour, same as manifest theme_color (--green-700 / --color-action)
+        { name: 'theme-color', content: '#075e46' },
+      ],
       link: [
         { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
         { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml', sizes: 'any' },
@@ -43,6 +50,31 @@ export default defineNuxtConfig({
     prerender: {
       // All 18 profiles explicitly, independent of the crawler
       routes: ['/speakers', ...data.speakers.map((s) => `/speakers/${s.id}`)],
+    },
+  },
+
+  // PWA, see docs/schritt3/01-pwa-setup.md
+  pwa: {
+    registerType: 'autoUpdate', // new service worker activates without user prompt
+    manifest: {
+      name: 'Ctrl Alt Meet',
+      short_name: 'Ctrl Alt Meet',
+      description: 'Der Shortcut durch die FrontendNow',
+      lang: 'de',
+      start_url: '/',
+      scope: '/',
+      display: 'standalone',
+      theme_color: '#075e46',      // --green-700 / --color-action
+      background_color: '#e8fff2', // --green-50 / --color-bg
+      icons: [
+        { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+        { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      ],
+    },
+    workbox: {
+      navigateFallback: null, // offline behaviour follows in C
+      // runtimeCaching: [] ← session/speaker data caching (C, Person 2)
     },
   },
 })

@@ -1,5 +1,6 @@
 <template>
   <div class="app-shell">
+    <NuxtPwaManifest />
     <AppHeader />
     <main class="app-main">
       <NuxtPage />
