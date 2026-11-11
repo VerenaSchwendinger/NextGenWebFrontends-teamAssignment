@@ -22,4 +22,10 @@ _Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
 - **Prompt:** „Wie wird das Manifest in den `<head>` eingebunden, und an welcher Stelle in `app.vue` gehört `<NuxtPwaManifest />` hin?“
 - **Zweck:** Ohne die Komponente erzeugt das Modul zwar die Manifest-Datei, verlinkt sie aber nicht, und die App ist nicht installierbar. Die Komponente zeigt nichts auf der Seite an, ihre Position ist also egal. Sie steht innerhalb von `.app-shell` über dem `AppHeader`, damit das Template wie bisher ein einziges Wurzelelement hat.
 
+### 2026-11-11 · Installierbarkeit prüfen
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Chrome bietet mir keine Installation an, obwohl Manifest und Service Worker in den DevTools korrekt aussehen. Woran liegt das?“
+- **Zweck:** Die Ursache für das fehlende Installieren-Symbol finden. Unter „Installability“ zeigten die DevTools, dass die Seite in einem Inkognito-Fenster geöffnet war, in dem Chrome grundsätzlich keine Installation erlaubt. Im normalen Fenster ließ sich die App installieren und öffnete sich im eigenen Fenster ohne Adressleiste. Die Hinweise zu fehlenden Screenshots im Manifest betreffen nur einen ausführlicheren Installationsdialog und sind für die Installierbarkeit nicht nötig.
+
 ---
