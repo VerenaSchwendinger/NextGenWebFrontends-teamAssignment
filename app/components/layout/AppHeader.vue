@@ -91,7 +91,7 @@ watch(() => route.fullPath, close)
 
 .app-header__mark {
   display: block;
-  width: 2.5rem;  /* 40px, same height as the keycaps */
+  width: 2.5rem;  /* 40px */
   height: 2.5rem;
 }
 
@@ -220,7 +220,7 @@ watch(() => route.fullPath, close)
     order: 2;
   }
 
-    .app-header__nav-wrap {
+  .app-header__nav-wrap {
     display: none;
     width: 100%;
     margin-left: 0;

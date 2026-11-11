@@ -12,7 +12,7 @@ Wir verwenden das Nuxt-Modul `@vite-pwa/nuxt`. Es erzeugt beim Build automatisch
 ## Kernaussagen
 
 - Die App heißt „Ctrl Alt Meet“, öffnet sich ohne Adressleiste im eigenen Fenster (`standalone`) und startet auf der Startseite.
-- Icons gibt es in 192 und 512 px, dazu eine Variante mit Rand, die Android beim Zuschneiden nicht beschneidet.
+- Icons gibt es in 192 und 512 px, dazu eine Variante mit Sicherheitsrand, damit Android das Icon beim Zuschneiden nicht abschneidet.
 - Fensterleiste (`theme_color`) und Startbildschirm (`background_color`) nutzen Forest Code und Mint Fog aus unseren Tokens. Da das Manifest keine CSS-Variablen versteht, stehen dort die Hex-Werte.
 - Das Icon zeigt eine Taste mit Ctrl-Zeichen, passend zum verspielt-technischen Markenkonzept aus Dokument 01.
 
