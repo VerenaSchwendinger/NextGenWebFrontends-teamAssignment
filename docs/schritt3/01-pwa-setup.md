@@ -13,8 +13,8 @@ Dieses Dokument beschreibt Werkzeug, Manifest-Werte, Icons und Farben der PWA un
 - `@vite-pwa/nuxt` erzeugt Manifest und Service Worker beim Build.
 - Die App öffnet sich im eigenen Fenster ohne Adressleiste.
 - Icons und Farben stammen aus unseren Design Tokens.
+
 ## Umsetzung
- 
 ### Werkzeug
  
 Wir verwenden das Nuxt-Modul `@vite-pwa/nuxt`. Es erzeugt das Manifest (Steckbrief der App) und den Service Worker (Skript, das Anfragen abfängt und Inhalte offline bereitstellt) und registriert ihn automatisch. Das Modul bringt Workbox mit, eine Bibliothek mit fertigen Caching-Strategien (siehe Dokument 02). Ein selbst geschriebener Service Worker wäre mehr Code ohne Mehrwert.
