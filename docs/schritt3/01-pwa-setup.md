@@ -5,17 +5,27 @@ _Tooling, Manifest-Werte und Begründung der Icon- und Farbwerte für Ctrl Alt M
 ---
 
 ## Übersicht
-
-Wir verwenden das Nuxt-Modul `@vite-pwa/nuxt`. Es erzeugt beim Build automatisch das Manifest (die Steckbrief-Datei der App) und den Service Worker (ein Skript, das im Hintergrund Anfragen abfängt und Inhalte offline bereitstellt). Außerdem bringt es Workbox mit, eine Bibliothek mit fertigen Caching-Strategien, die wir für die Offline-Regeln brauchen (siehe Dokument 02). Die Icons erzeugt `@vite-pwa/assets-generator` aus `public/logo.svg`.
-
-
+ 
+Dieses Dokument beschreibt Werkzeug, Manifest-Werte, Icons und Farben der PWA und begründet die Wahl.
+ 
 ## Kernaussagen
-
-- Die App heißt „Ctrl Alt Meet“, öffnet sich ohne Adressleiste im eigenen Fenster (`standalone`) und startet auf der Startseite.
-- Icons gibt es in 192 und 512 px, dazu eine Variante mit Sicherheitsrand, damit Android das Icon beim Zuschneiden nicht abschneidet.
-- Fensterleiste (`theme_color`) und Startbildschirm (`background_color`) nutzen Forest Code und Mint Fog aus unseren Tokens. Da das Manifest keine CSS-Variablen versteht, stehen dort die Hex-Werte.
-- Das Icon zeigt eine Taste mit Ctrl-Zeichen, passend zum verspielt-technischen Markenkonzept aus Dokument 01.
-
+ 
+- `@vite-pwa/nuxt` erzeugt Manifest und Service Worker beim Build.
+- Die App öffnet sich im eigenen Fenster ohne Adressleiste.
+- Icons und Farben stammen aus unseren Design Tokens.
+## Werkzeug
+ 
+Wir verwenden das Nuxt-Modul `@vite-pwa/nuxt`. Es erzeugt das Manifest (Steckbrief der App) und den Service Worker (Skript, das Anfragen abfängt und Inhalte offline bereitstellt) und registriert ihn automatisch. Das Modul bringt Workbox mit, eine Bibliothek mit fertigen Caching-Strategien (siehe Dokument 02). Ein selbst geschriebener Service Worker wäre mehr Code ohne Mehrwert.
+ 
+## Manifest
+ 
+Die App heißt „Ctrl Alt Meet“, öffnet sich als eigenständiges Fenster (`standalone`) und startet auf der Startseite. Eine feste `id` hält die installierte App eindeutig erkennbar, auch wenn sich die Start-URL ändert.
+ 
+## Icons und Farben
+ 
+Die Icons in 192 und 512 px erzeugt `@vite-pwa/assets-generator` aus `public/logo.svg`, dazu eine Variante mit Sicherheitsrand, die Android beim Zuschneiden nicht abschneidet. Das Motiv, eine Taste mit Ctrl-Zeichen, greift den verspielt-technischen Markenwert aus Dokument 01 auf.
+ 
+`theme_color` ist Forest Code (`--color-action`) und färbt die Fensterleiste, `background_color` ist Mint Fog (`--color-bg`) und füllt den Startbildschirm. Da das Manifest keine CSS-Variablen versteht, stehen dort die Hex-Werte der Tokens.
 
 ---
 
