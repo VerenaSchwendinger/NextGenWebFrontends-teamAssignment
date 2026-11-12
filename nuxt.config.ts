@@ -86,6 +86,28 @@ export default defineNuxtConfig({
       // utm_ and fbclid are Workbox defaults and must be listed again.
       ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^_b$/],
       navigateFallback: null, // offline behaviour follows in C
+      runtimeCaching: [
+        // Google Fonts: Cache-First ("1. Statische Assets").
+        // Cached on the first load with an active service worker, then served offline.
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-stylesheets',
+            expiration: { maxEntries: 5, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-webfonts',
+            expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+      ],
     },
   },
 })

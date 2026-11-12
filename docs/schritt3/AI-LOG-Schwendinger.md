@@ -40,4 +40,10 @@ _Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
 - **Prompt:** „Die Startseite lädt offline, zeigt aber ‚500 – Konferenzdaten nicht verfügbar'. Woran liegt das?“
 - **Zweck:** Die Ursache für den Fehler beim Offline-Test finden. Die Startseite holt ihre Daten aus `_payload.json`, die zwar vorab gespeichert ist, aber von Nuxt mit der Build-Nummer als Parameter (`?_b=…`) abgerufen wird. Für den Service Worker ist das eine andere Adresse, er fand die gespeicherte Datei deshalb nicht. `ignoreURLParametersMatching` ignoriert diesen Parameter jetzt, danach lädt die Startseite offline vollständig. Die Einstellung gilt für alle vorab gespeicherten Seiten-Daten, also auch für die Speaker-Seiten.
 
+### 2026-11-12 · Google Fonts zwischenspeichern
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie speichere ich die Google Fonts im Service Worker, obwohl sie von einem fremden Server kommen?“
+- **Zweck:** Zwei Cache-First-Regeln für das Stylesheet (`fonts.googleapis.com`) und die Schriftdateien (`fonts.gstatic.com`) anlegen, wie in Dokument 02 festgelegt. Antworten fremder Server kommen teils mit Status 0 an und werden deshalb ausdrücklich zugelassen. Beim Testen zeigte sich die Lücke aus dem Konzept: Beim allerersten Besuch lädt der Browser die Schriften, bevor der Service Worker aktiv ist. Sie landen erst beim zweiten Laden im Cache.
+
 ---
