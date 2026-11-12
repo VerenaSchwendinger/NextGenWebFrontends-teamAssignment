@@ -46,4 +46,10 @@ _Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
 - **Prompt:** „Wie speichere ich die Google Fonts im Service Worker, obwohl sie von einem fremden Server kommen?“
 - **Zweck:** Zwei Cache-First-Regeln für das Stylesheet (`fonts.googleapis.com`) und die Schriftdateien (`fonts.gstatic.com`) anlegen, wie in Dokument 02 festgelegt. Antworten fremder Server kommen teils mit Status 0 an und werden deshalb ausdrücklich zugelassen. Beim Testen zeigte sich die Lücke aus dem Konzept: Beim allerersten Besuch lädt der Browser die Schriften, bevor der Service Worker aktiv ist. Sie landen erst beim zweiten Laden im Cache.
 
+### 2026-11-12 · Offline-Seite
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Wie zeige ich statt der Fehlerseite des Browsers eine eigene Offline-Seite, wenn eine Seite weder online noch im Cache ist?“
+- **Zweck:** Den Worst Case aus Dokument 02 umsetzen. Die Seite `app/pages/offline.vue` liegt laut ADR 02 bei den Seiten und wird beim Build erzeugt (`prerender: true`), damit der Service Worker sie vorab speichern kann. Eine letzte Regel für alle Seitenaufrufe liefert sie aus, wenn das Netz nicht antwortet. Die Rückfall-Logik ist als wiederverwendbarer Baustein `offlineFallback` angelegt, damit Person 2 sie auch an ihre Regel für die Session-Seiten hängen kann.
+
 ---

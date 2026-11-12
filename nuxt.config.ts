@@ -1,6 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import data from './app/data/conference-data.json'
 
+// Service worker plugin: answers a failed page request with the precached offline page
+const offlineFallback = {
+  handlerDidError: async () => caches.match('/offline', { ignoreSearch: true }),
+}
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -43,6 +48,7 @@ export default defineNuxtConfig({
     '/speakers/**': { prerender: true },                    // SSG, profiles
     '/sessions':    { swr: 60, prerender: false },          // ISR principle, overview, never static
     '/sessions/**': { swr: 60, prerender: false },          // ISR principle, never static
+    '/offline':     { prerender: true },                    // SSG, offline page (schritt 3)
     '/my-program':  { ssr: false, prerender: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
   },
 
@@ -76,7 +82,7 @@ export default defineNuxtConfig({
     workbox: {
       // App shell with home page: precached on install (Cache-First).
       // See 02-offline-strategie-konzept.md, "1. Statische Assets".
-      globPatterns: ['**/*.{js,css,png,svg,ico}', 'index.html'],
+      globPatterns: ['**/*.{js,css,png,svg,ico}', 'index.html', 'offline/index.html'],
       // "Mein Programm" page is precached as well ("3. Mein Programm").
       // It is CSR (rendering ADR, decision 4) and not a static file, so it is added by hand.
       // The revision changes with every build.
@@ -106,6 +112,14 @@ export default defineNuxtConfig({
             expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
             cacheableResponse: { statuses: [0, 200] },
           },
+        },
+        // Offline page ("Worst Case"): any page request that fails and has no
+        // matching rule above shows the precached offline page instead of the
+        // browser error page. Must stay the last rule.
+        {
+          urlPattern: ({ request }) => request.mode === 'navigate',
+          handler: 'NetworkOnly',
+          options: { plugins: [offlineFallback] },
         },
       ],
     },
