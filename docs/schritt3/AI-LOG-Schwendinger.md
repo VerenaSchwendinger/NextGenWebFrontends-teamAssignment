@@ -28,4 +28,16 @@ _Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
 - **Prompt:** „Chrome bietet mir keine Installation an, obwohl Manifest und Service Worker in den DevTools korrekt aussehen. Woran liegt das?“
 - **Zweck:** Die Ursache für das fehlende Installieren-Symbol finden. Unter „Installability“ zeigten die DevTools, dass die Seite in einem Inkognito-Fenster geöffnet war, in dem Chrome grundsätzlich keine Installation erlaubt. Im normalen Fenster ließ sich die App installieren und öffnete sich im eigenen Fenster ohne Adressleiste. Die Hinweise zu fehlenden Screenshots im Manifest betreffen nur einen ausführlicheren Installationsdialog und sind für die Installierbarkeit nicht nötig.
 
+### 2026-11-12 · App-Shell vorab speichern
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Warum landen im Precache nur Seiten-Daten, aber kein JavaScript und CSS? Und wie stelle ich sicher, dass Startseite und ‚Mein Programm' schon nach dem ersten Online-Besuch offline funktionieren?“
+- **Zweck:** Zwei Probleme klären. Erstens ersetzt `@vite-pwa/nuxt` bei vorgerenderten Seiten die Standardliste der vorab gespeicherten Dateien durch eine, die nur `_payload.json` enthält. Mit eigenen `globPatterns` sind jetzt JavaScript, CSS und Icons im Precache. Zweitens startet der Service Worker erst während des ersten Besuchs und sieht diesen Seitenaufruf nicht mehr. Startseite und „Mein Programm“ werden deshalb beim Installieren vorab gespeichert. Das passt zur Rendering-ADR, weil sich beide Seiten nur mit einem neuen Build ändern.
+
+### 2026-11-12 · Startseite offline ohne Daten
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Die Startseite lädt offline, zeigt aber ‚500 – Konferenzdaten nicht verfügbar'. Woran liegt das?“
+- **Zweck:** Die Ursache für den Fehler beim Offline-Test finden. Die Startseite holt ihre Daten aus `_payload.json`, die zwar vorab gespeichert ist, aber von Nuxt mit der Build-Nummer als Parameter (`?_b=…`) abgerufen wird. Für den Service Worker ist das eine andere Adresse, er fand die gespeicherte Datei deshalb nicht. `ignoreURLParametersMatching` ignoriert diesen Parameter jetzt, danach lädt die Startseite offline vollständig. Die Einstellung gilt für alle vorab gespeicherten Seiten-Daten, also auch für die Speaker-Seiten.
+
 ---
