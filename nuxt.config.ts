@@ -91,8 +91,10 @@ export default defineNuxtConfig({
       // precached _payload.json of the home page is found offline.
       // utm_ and fbclid are Workbox defaults and must be listed again.
       ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^_b$/],
-      navigateFallback: null, // offline behaviour follows in C
+      navigateFallback: null,
       runtimeCaching: [
+        // ← session/speaker data rules (C, Franziska) go here, before the rules below
+
         // Google Fonts: Cache-First ("1. Statische Assets").
         // Cached on the first load with an active service worker, then served offline.
         {

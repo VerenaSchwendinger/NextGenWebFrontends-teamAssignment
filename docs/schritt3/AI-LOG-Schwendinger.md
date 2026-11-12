@@ -52,4 +52,10 @@ _Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
 - **Prompt:** „Wie zeige ich statt der Fehlerseite des Browsers eine eigene Offline-Seite, wenn eine Seite weder online noch im Cache ist?“
 - **Zweck:** Den Worst Case aus Dokument 02 umsetzen. Die Seite `app/pages/offline.vue` liegt laut ADR 02 bei den Seiten und wird beim Build erzeugt (`prerender: true`), damit der Service Worker sie vorab speichern kann. Eine letzte Regel für alle Seitenaufrufe liefert sie aus, wenn das Netz nicht antwortet. Die Rückfall-Logik ist als wiederverwendbarer Baustein `offlineFallback` angelegt, damit Person 2 sie auch an ihre Regel für die Session-Seiten hängen kann.
 
+### 2026-11-12 · Adresse der Offline-Seite
+
+- **Tool:** Claude (claude.ai)
+- **Prompt:** „Warum wechselt die Adresse von `/sessions/s13` auf `/offline`, und lässt sich das vermeiden?“
+- **Zweck:** Nuxt stellt die Adresse nach dem Laden auf `/offline` um, weil die Offline-Seite für diese Route vorgerendert ist. Eine einfache HTML-Datei würde die Adresse behalten, hätte aber weder Header noch Navigation der App. Wir behalten die Nuxt-Seite und dokumentieren das Verhalten als Lücke in D. Der Text der Offline-Seite verweist deshalb auf die Navigation statt auf erneutes Laden.
+
 ---

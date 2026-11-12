@@ -11,7 +11,7 @@ useSeoMeta({ robots: 'noindex' })
     <h1 class="offline__title">Du bist offline</h1>
     <p class="offline__text">
       Diese Seite hast du noch nie mit Verbindung geöffnet, deshalb ist sie nicht gespeichert.
-      Sobald du wieder online bist, lädt sie ganz normal.
+      Sobald du wieder online bist, kannst du sie über die Navigation erneut öffnen.
     </p>
     <p class="offline__text">
       Deine gemerkten Sessions findest du auch ohne Verbindung in
