@@ -107,7 +107,21 @@ export default defineNuxtConfig({
             cacheableResponse: { statuses: [200] }, // never cache a server error
           },
         },
-
+        // Session pages (server-rendered with swr: 60): Stale-While-Revalidate,
+        // same strategy as their data ("2. Session- und Speaker-Daten").
+        // A never visited session page opened directly while offline has no cache entry,
+        // then the shared offline page is shown ("Worst Case").
+        {
+          urlPattern: ({ request, url }) =>
+            request.mode === 'navigate' && url.pathname.startsWith('/sessions'),
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'session-pages',
+            cacheableResponse: { statuses: [200] },
+            expiration: { maxEntries: 50 }, // overview + detail pages, keeps storage bounded
+            plugins: [offlineFallback],
+          },
+        },
         // Google Fonts: Cache-First ("1. Statische Assets").
         // Cached on the first load with an active service worker, then served offline.
         {
