@@ -1,61 +1,40 @@
-# AI-Log Schwendinger Schritt 3
+# AI-Log Reichhold Schritt 3
 
-_Einsatz von KI (Claude) bei der Erstellung von Ctrl Alt Meet._
+_Einsatz von KI (Claude) bei der Umsetzung von Ctrl Alt Meet._
 
 ---
 
-### 2026-11-11 · Icons generieren
- 
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Wie erzeuge ich aus dem Logo die Icons für das Manifest?“
-- **Zweck:** Mit `@vite-pwa/assets-generator` alle Größen aus `public/logo.svg` erzeugen (192, 512, maskable, Apple-Touch-Icon, Favicon). Über `pwa-assets.config.ts` ist der Hintergrund für das maskable- und das Apple-Icon auf Forest Code gesetzt, weil der Generator sonst einen weißen Rand ergänzt.
+## Wofür ich KI genutzt habe
 
-### 2026-11-11 · PWA-Konfiguration in nuxt.config.ts
+### 2026-11-11 · Review des Offline-Konzepts
 
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Wie ergänze ich unsere `nuxt.config.ts` um Manifest und Service Worker, ohne die `routeRules` aus der Rendering-ADR zu verändern? Die Farben sollen aus unseren Design Tokens kommen.“
-- **Zweck:** Das Modul `@vite-pwa/nuxt`, ein `theme-color`-Meta-Tag und den `pwa`-Block ergänzen. Das Manifest enthält Name, Beschreibung, Sprache, Start-URL, `display: "standalone"` und drei Icons (192, 512, maskable). `theme_color` entspricht `--color-action`, `background_color` entspricht `--color-bg`, damit Statusleiste und Splashscreen zur App passen. `registerType: 'autoUpdate'` aktiviert neue Service-Worker-Versionen ohne Rückfrage. `navigateFallback` ist bewusst deaktiviert, damit der Service Worker nicht schon vor der Entscheidung in B jede Navigation mit der Startseite beantwortet. `runtimeCaching` bleibt als Platzhalter für die Daten-Regeln von Person 2 frei.
+- **Tool** Claude (Cowork, Desktop-App)
+- **Prompt** „wie würdest du das konzept ändern?“
+- **Zweck** Entwurf von Dokument 02 gegen Angabe, Rendering-ADR und Code prüfen. Speaker-Daten standen gleichzeitig unter Cache-First und Stale-While-Revalidate, das geht nicht, weil `/api/conference` Sessions und Speaker gemeinsam liefert. Außerdem hätte „Mein Programm“ offline keine Daten, wenn vorher nur die Startseite besucht wurde, weil die vorgerenderte Startseite die API nie aufruft.
 
-### 2026-11-11 · Manifest-Link mit NuxtPwaManifest
+### 2026-11-11 · Startseite offline mit Fehler 500
 
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Wie wird das Manifest in den `<head>` eingebunden, und an welcher Stelle in `app.vue` gehört `<NuxtPwaManifest />` hin?“
-- **Zweck:** Ohne die Komponente erzeugt das Modul zwar die Manifest-Datei, verlinkt sie aber nicht, und die App ist nicht installierbar. Die Komponente zeigt nichts auf der Seite an, ihre Position ist also egal. Sie steht innerhalb von `.app-shell` über dem `AppHeader`, damit das Template wie bisher ein einziges Wurzelelement hat.
+- **Tool** Claude (Cowork, Desktop-App)
+- **Prompt** „warum fehler 500 Konferenzdaten nicht verfügbar“
+- **Zweck** Die Ursache finden. Ohne eigene `globPatterns` speicherte `@vite-pwa/nuxt` nur die Seiten-Daten vorab, kein JavaScript, CSS oder HTML (nur 23 Einträge). Außerdem ruft Nuxt die Seiten-Daten mit der Build-Nummer ab (`?_b=…`), unter dieser Adresse fand der Service Worker die gespeicherte Datei nicht. Claude schlug zuerst eine experimentelle Modul-Option vor, die einfachere Lösung über `ignoreURLParametersMatching` hat Person 1 umgesetzt.
 
-### 2026-11-11 · Installierbarkeit prüfen
+### 2026-11-14 · Caching-Regeln für Session- und Speaker-Daten
 
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Chrome bietet mir keine Installation an, obwohl Manifest und Service Worker in den DevTools korrekt aussehen. Woran liegt das?“
-- **Zweck:** Die Ursache für das fehlende Installieren-Symbol finden. Unter „Installability“ zeigten die DevTools, dass die Seite in einem Inkognito-Fenster geöffnet war, in dem Chrome grundsätzlich keine Installation erlaubt. Im normalen Fenster ließ sich die App installieren und öffnete sich im eigenen Fenster ohne Adressleiste. Die Hinweise zu fehlenden Screenshots im Manifest betreffen nur einen ausführlicheren Installationsdialog und sind für die Installierbarkeit nicht nötig.
+- **Tool** Claude (Cowork, Desktop-App)
+- **Prompt** „anleitung und erkläre angabe c?“ [Angabe zu C eingefügt]
+- **Zweck** Speaker-Seiten in den Precache aufnehmen, Stale-While-Revalidate für `/api/conference` und die Session-Seiten ergänzen und das Plugin `pwa-warm-up.client.ts` schreiben, das die Konferenzdaten beim Start einmal lädt.
 
-### 2026-11-12 · App-Shell vorab speichern
+### 2026-11-14 · Warum conference-data im Cache fehlte
 
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Warum landen im Precache nur Seiten-Daten, aber kein JavaScript und CSS? Und wie stelle ich sicher, dass Startseite und ‚Mein Programm' schon nach dem ersten Online-Besuch offline funktionieren?“
-- **Zweck:** Zwei Probleme klären. Erstens ersetzt `@vite-pwa/nuxt` bei vorgerenderten Seiten die Standardliste der vorab gespeicherten Dateien durch eine, die nur `_payload.json` enthält. Mit eigenen `globPatterns` sind jetzt JavaScript, CSS und Icons im Precache. Zweitens startet der Service Worker erst während des ersten Besuchs und sieht diesen Seitenaufruf nicht mehr. Startseite und „Mein Programm“ werden deshalb beim Installieren vorab gespeichert. Das passt zur Rendering-ADR, weil sich beide Seiten nur mit einem neuen Build ändern.
+- **Tool** Claude (Cowork, Desktop-App)
+- **Prompt** „warum in devtools keine conference data?“ [Screenshots von Cache Storage und Network-Tab]
+- **Zweck** Prüfen, ob der Fehler in der Regel oder im Testablauf liegt. Statt weiter in der App zu klicken, haben wir die Regel isoliert getestet (`await fetch('/api/conference'); await caches.keys()` in der Konsole). Der Cache erschien sofort, die Regel war also richtig. Die eigentliche Ursache war, dass Nuxt die API nur beim Seitenwechsel innerhalb der App abfragt. Beim direkten Aufruf oder Neuladen schickt der Server die Daten im HTML mit, und es entsteht keine Anfrage, die der Service Worker speichern könnte. Genau dieses Verhalten ist der Grund für das Plugin `pwa-warm-up.client.ts`, das den Cache unabhängig vom Einstieg füllt.
 
-### 2026-11-12 · Startseite offline ohne Daten
+### 2026-11-14 · Testszenarien und Verifikations-Nachweis
 
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Die Startseite lädt offline, zeigt aber ‚500 – Konferenzdaten nicht verfügbar'. Woran liegt das?“
-- **Zweck:** Die Ursache für den Fehler beim Offline-Test finden. Die Startseite holt ihre Daten aus `_payload.json`, die zwar vorab gespeichert ist, aber von Nuxt mit der Build-Nummer als Parameter (`?_b=…`) abgerufen wird. Für den Service Worker ist das eine andere Adresse, er fand die gespeicherte Datei deshalb nicht. `ignoreURLParametersMatching` ignoriert diesen Parameter jetzt, danach lädt die Startseite offline vollständig. Die Einstellung gilt für alle vorab gespeicherten Seiten-Daten, also auch für die Speaker-Seiten.
+- **Tool** Claude (Cowork, Desktop-App)
+- **Prompt** „bitte ergänze testszenarien für person 2 und erstelle und erkläre part d und e“
+- **Zweck** Beobachtungen für D formulieren, Dokument 04 entwerfen und prüfen, ob jeder Screenshot zum beschriebenen Zustand passt. „Clear site data“ löscht den HTTP-Cache nicht, ein echter Erstbesuch für Szenario iii geht deshalb nur im Inkognito-Fenster. Lighthouse hat in Chrome 157 keine PWA-Kategorie mehr. Claude hatte behauptet, bei der Offline-Seite bleibe die Session-Adresse stehen, der Test zeigte aber, dass Nuxt auf `/offline` umstellt. Im Protokoll steht das getestete Verhalten.
 
-### 2026-11-12 · Google Fonts zwischenspeichern
-
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Wie speichere ich die Google Fonts im Service Worker, obwohl sie von einem fremden Server kommen?“
-- **Zweck:** Zwei Cache-First-Regeln für das Stylesheet (`fonts.googleapis.com`) und die Schriftdateien (`fonts.gstatic.com`) anlegen, wie in Dokument 02 festgelegt. Antworten fremder Server kommen teils mit Status 0 an und werden deshalb ausdrücklich zugelassen. Beim Testen zeigte sich die Lücke aus dem Konzept: Beim allerersten Besuch lädt der Browser die Schriften, bevor der Service Worker aktiv ist. Sie landen erst beim zweiten Laden im Cache.
-
-### 2026-11-12 · Offline-Seite
-
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Wie zeige ich statt der Fehlerseite des Browsers eine eigene Offline-Seite, wenn eine Seite weder online noch im Cache ist?“
-- **Zweck:** Den Worst Case aus Dokument 02 umsetzen. Die Seite `app/pages/offline.vue` liegt laut ADR 02 bei den Seiten und wird beim Build erzeugt (`prerender: true`), damit der Service Worker sie vorab speichern kann. Eine letzte Regel für alle Seitenaufrufe liefert sie aus, wenn das Netz nicht antwortet. Die Rückfall-Logik ist als wiederverwendbarer Baustein `offlineFallback` angelegt, damit Person 2 sie auch an ihre Regel für die Session-Seiten hängen kann.
-
-### 2026-11-12 · Adresse der Offline-Seite
-
-- **Tool:** Claude (claude.ai)
-- **Prompt:** „Warum wechselt die Adresse von `/sessions/s13` auf `/offline`, und lässt sich das vermeiden?“
-- **Zweck:** Nuxt stellt die Adresse nach dem Laden auf `/offline` um, weil die Offline-Seite für diese Route vorgerendert ist. Eine einfache HTML-Datei würde die Adresse behalten, hätte aber weder Header noch Navigation der App. Wir behalten die Nuxt-Seite und dokumentieren das Verhalten als Lücke in D. Der Text der Offline-Seite verweist deshalb auf die Navigation statt auf erneutes Laden.
 
 ---
