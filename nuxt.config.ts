@@ -43,13 +43,13 @@ export default defineNuxtConfig({
 
   // Rendering strategy per route, see docs/schritt2/01-rendering-strategie-adr.md
   routeRules: {
-    '/':            { prerender: true },                    // SSG, home page
-    '/speakers':    { prerender: true },                    // SSG, speaker list
+    '/': { prerender: true },                    // SSG, home page
+    '/speakers': { prerender: true },                    // SSG, speaker list
     '/speakers/**': { prerender: true },                    // SSG, profiles
-    '/sessions':    { swr: 60, prerender: false },          // ISR principle, overview, never static
+    '/sessions': { swr: 60, prerender: false },          // ISR principle, overview, never static
     '/sessions/**': { swr: 60, prerender: false },          // ISR principle, never static
-    '/offline':     { prerender: true },                    // SSG, offline page (schritt 3)
-    '/my-program':  { ssr: false, prerender: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
+    '/offline': { prerender: true },                    // SSG, offline page (schritt 3)
+    '/my-program': { ssr: false, prerender: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
   },
 
   nitro: {
@@ -95,7 +95,18 @@ export default defineNuxtConfig({
       ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^_b$/],
       navigateFallback: null,
       runtimeCaching: [
-        // ← session/speaker data rules (C, Franziska) go here, before the rules below
+        // Conference data (sessions and speakers): Stale-While-Revalidate
+        // ("2. Session- und Speaker-Daten", "Wann Stale-While-Revalidate nötig ist").
+        // Answers from the cache at once and updates it in the background,
+        // so late room or time changes arrive with the next request (swr: 60 in rendering ADR).
+        {
+          urlPattern: ({ url }) => url.pathname === '/api/conference',
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'conference-data',
+            cacheableResponse: { statuses: [200] }, // never cache a server error
+          },
+        },
 
         // Google Fonts: Cache-First ("1. Statische Assets").
         // Cached on the first load with an active service worker, then served offline.
