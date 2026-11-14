@@ -2,15 +2,20 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 // Reads the dataset from disk on every call, so edits show up without a rebuild.
-// Paths are resolved from the project root, which is the working directory
-// for `npm run dev`, `npm run build` (prerender) and `npm run preview`.
-const DATA_PATH = join(process.cwd(), 'app/data/conference-data.json')
+// `npm run dev` and `npm run build` run in the project root, `npm run preview`
+// starts the server inside `.output`. Both locations are tried.
+const DATA_PATHS = [
+  join(process.cwd(), 'app/data/conference-data.json'),
+  join(process.cwd(), '..', 'app/data/conference-data.json'),
+]
 
 export default defineEventHandler(async () => {
-  try {
-    const raw = await readFile(DATA_PATH, 'utf-8')
-    return JSON.parse(raw)
-  } catch {
-    throw createError({ statusCode: 500, statusMessage: 'Konferenzdaten konnten nicht gelesen werden' })
+  for (const path of DATA_PATHS) {
+    try {
+      return JSON.parse(await readFile(path, 'utf-8'))
+    } catch {
+      // try the next location
+    }
   }
+  throw createError({ statusCode: 500, statusMessage: 'Konferenzdaten konnten nicht gelesen werden' })
 })
