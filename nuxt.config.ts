@@ -82,7 +82,9 @@ export default defineNuxtConfig({
     workbox: {
       // App shell with home page: precached on install (Cache-First).
       // See 02-offline-strategie-konzept.md, "1. Statische Assets".
-      globPatterns: ['**/*.{js,css,png,svg,ico}', 'index.html', 'offline/index.html'],
+      // Speaker list and all 18 profiles are prerendered and precached as well,
+      // so they open offline even if never visited ("2. Session- und Speaker-Daten", Cache-First).
+      globPatterns: ['**/*.{js,css,png,svg,ico}', 'index.html', 'offline/index.html', 'speakers/**/index.html'],
       // "Mein Programm" page is precached as well ("3. Mein Programm").
       // It is CSR (rendering ADR, decision 4) and not a static file, so it is added by hand.
       // The revision changes with every build.
