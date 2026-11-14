@@ -15,6 +15,8 @@
     "vue-router": "^5.3.1"
   },
   "devDependencies": {
-    "@types/node": "^26.6.6"
+    "@types/node": "^26.6.6",
+    "@vite-pwa/assets-generator": "^1.0.4",
+    "@vite-pwa/nuxt": "^1.1.1"
   }
 }

@@ -1,9 +1,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import data from './app/data/conference-data.json'
 
+// Service worker plugin: answers a failed page request with the precached offline page
+const offlineFallback = {
+  handlerDidError: async () => caches.match('/offline', { ignoreSearch: true }),
+}
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
+
+  // PWA module: manifest + service worker (Workbox), see docs/schritt3/01-pwa-setup.md
+  modules: ['@vite-pwa/nuxt'],
 
   // Global design tokens from /tokens (~~ points to the project root)
   css: ['~~/tokens/tokens.css'],
@@ -15,7 +23,14 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'de' },
       title: 'Ctrl Alt Meet',
+      meta: [
+        // Browser UI colour, same as manifest theme_color (--green-700 / --color-action)
+        { name: 'theme-color', content: '#075e46' },
+      ],
       link: [
+        { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
+        { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml', sizes: 'any' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon-180x180.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
         {
@@ -28,18 +43,114 @@ export default defineNuxtConfig({
 
   // Rendering strategy per route, see docs/schritt2/01-rendering-strategie-adr.md
   routeRules: {
-    '/':            { prerender: true },                    // SSG, home page
-    '/speakers':    { prerender: true },                    // SSG, speaker list
+    '/': { prerender: true },                    // SSG, home page
+    '/speakers': { prerender: true },                    // SSG, speaker list
     '/speakers/**': { prerender: true },                    // SSG, profiles
-    '/sessions':    { swr: 60, prerender: false },          // ISR principle, overview, never static
+    '/sessions': { swr: 60, prerender: false },          // ISR principle, overview, never static
     '/sessions/**': { swr: 60, prerender: false },          // ISR principle, never static
-    '/my-program':  { ssr: false, prerender: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
+    '/offline': { prerender: true },                    // SSG, offline page (schritt 3)
+    '/my-program': { ssr: false, prerender: false, headers: { 'x-robots-tag': 'noindex' } }, // CSR
   },
 
   nitro: {
     prerender: {
       // All 18 profiles explicitly, independent of the crawler
       routes: ['/speakers', ...data.speakers.map((s) => `/speakers/${s.id}`)],
+    },
+  },
+
+  // PWA, see docs/schritt3/01-pwa-setup.md
+  pwa: {
+    registerType: 'autoUpdate', // new service worker activates without user prompt
+    manifest: {
+      name: 'Ctrl Alt Meet',
+      short_name: 'Ctrl Alt Meet',
+      description: 'Der Shortcut durch die FrontendNow',
+      lang: 'de',
+      id: '/',
+      start_url: '/',
+      scope: '/',
+      display: 'standalone',
+      theme_color: '#075e46',      // --green-700 / --color-action
+      background_color: '#e8fff2', // --green-50 / --color-bg
+      icons: [
+        { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+        { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+        { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      ],
+    },
+    workbox: {
+      // App shell with home page: precached on install (Cache-First).
+      // See 02-offline-strategie-konzept.md, "1. Statische Assets".
+      // Speaker list and all 18 profiles are prerendered and precached as well,
+      // so they open offline even if never visited ("2. Session- und Speaker-Daten", Cache-First).
+      globPatterns: ['**/*.{js,css,png,svg,ico}', 'index.html', 'offline/index.html', 'speakers/**/index.html'],
+      // "Mein Programm" page is precached as well ("3. Mein Programm").
+      // It is CSR (rendering ADR, decision 4) and not a static file, so it is added by hand.
+      // The revision changes with every build.
+      additionalManifestEntries: [{ url: '/my-program', revision: String(Date.now()) }],
+      // Nuxt appends the build id (?_b=...) to payload requests. Ignore it so the
+      // precached _payload.json of the home page is found offline.
+      // utm_ and fbclid are Workbox defaults and must be listed again.
+      ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^_b$/],
+      navigateFallback: null,
+      runtimeCaching: [
+        // Conference data (sessions and speakers): Stale-While-Revalidate
+        // ("2. Session- und Speaker-Daten", "Wann Stale-While-Revalidate nötig ist").
+        // Answers from the cache at once and updates it in the background,
+        // so late room or time changes arrive with the next request (swr: 60 in rendering ADR).
+        {
+          urlPattern: ({ url }) => url.pathname === '/api/conference',
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'conference-data',
+            cacheableResponse: { statuses: [200] }, // never cache a server error
+          },
+        },
+        // Session pages (server-rendered with swr: 60): Stale-While-Revalidate,
+        // same strategy as their data ("2. Session- und Speaker-Daten").
+        // A never visited session page opened directly while offline has no cache entry,
+        // then the shared offline page is shown ("Worst Case").
+        {
+          urlPattern: ({ request, url }) =>
+            request.mode === 'navigate' && url.pathname.startsWith('/sessions'),
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'session-pages',
+            cacheableResponse: { statuses: [200] },
+            expiration: { maxEntries: 50 }, // overview + detail pages, keeps storage bounded
+            plugins: [offlineFallback],
+          },
+        },
+        // Google Fonts: Cache-First ("1. Statische Assets").
+        // Cached on the first load with an active service worker, then served offline.
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-stylesheets',
+            expiration: { maxEntries: 5, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-webfonts',
+            expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        // Offline page ("Worst Case"): any page request that fails and has no
+        // matching rule above shows the precached offline page instead of the
+        // browser error page. Must stay the last rule.
+        {
+          urlPattern: ({ request }) => request.mode === 'navigate',
+          handler: 'NetworkOnly',
+          options: { plugins: [offlineFallback] },
+        },
+      ],
     },
   },
 })
